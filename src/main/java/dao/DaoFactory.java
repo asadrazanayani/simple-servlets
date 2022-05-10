@@ -1,6 +1,6 @@
 package dao;
 
-import com.revature.entity.Ticket;
+import entity.Ticket;
 
 // this class doesn't seem super useful because we only have one Dao, but with multiple daos, its use becomes apparent
 // multiple methods to return different daos:

@@ -1,8 +1,6 @@
 package dao;
 
-
-
-import com.revature.entity.Employee;
+import entity.Employee;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -20,7 +18,9 @@ public class EmployeeDao {
             em = new Employee(rs.getInt("employee_id"),
                     rs.getString("employee_name"),
                     rs.getString("employee_email"),
-                    rs.getString("employee_password"));
+                    rs.getString("employee_password"),
+                    rs.getBoolean("is_logged_in"));
+            System.out.println(em.toString());
         } catch (SQLException e) {
             System.out.println(e.getLocalizedMessage());
         }
@@ -41,22 +41,41 @@ public class EmployeeDao {
         }
         return isInserted;
     }
-//
-//    public List<Employee> getAllEmployees() {
-//        List<Employee> employeeList = new ArrayList<>();
-//        String query = "SELECT * FROM employees";
-//        try {
-//            PreparedStatement ps = connection.prepareStatement(query);
-//            ResultSet rs = ps.executeQuery();
-//            while (rs.next()) {
-//                Employee em = getEmployeeFromRS(rs);
-//                employeeList.add(em);
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return employeeList;
-//    }
+
+    public boolean update(Employee employee) {
+        boolean isUpdated = false;
+        String query = "UPDATE employees SET employee_name=?, employee_email=?, employee_password=?,is_logged_in=? " +
+                "WHERE " +
+                "employee_id=?;";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, employee.getEmployee_name());
+            ps.setString(2, employee.getEmployee_email());
+            ps.setString(3, employee.getEmployee_password());
+            ps.setBoolean(4, employee.isLoggedIn());
+            ps.setInt(5, employee.getEmployee_id());
+            isUpdated = ps.executeUpdate() >= 1;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return isUpdated;
+    }
+
+    public UDArray<Employee> getAllEmployees() {
+        UDArray<Employee> employeeList = new UDArray<>();
+        String query = "SELECT * FROM employees";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Employee em = getEmployeeFromRS(rs);
+                employeeList.add(em);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return employeeList;
+    }
 
     public boolean loginSuccess(String email, String password) {
         boolean isLoginSuccess = false;
@@ -70,11 +89,31 @@ public class EmployeeDao {
             Employee em = getEmployeeFromRS(rs);
             if (em.getEmployee_email().equals(email) && em.getEmployee_password().equals(password)) {
                 isLoginSuccess = true;
+                em.setLoggedIn(true);
+                System.out.println(em.toString());
+                boolean isUpdated = update(em);
+                if (isUpdated) {
+                    System.out.println("Employee Logged In");
+                }
             };
         } catch (SQLException e) {
-            System.out.println(e.getLocalizedMessage());
+            e.printStackTrace();
         }
         return isLoginSuccess;
+    }
+
+    public boolean isLoggedIn(int id) {
+        String query = "Select * from employees where employee_id = "+id+";";
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(query);
+            rs.next();
+            Employee em = getEmployeeFromRS(rs);
+            return em.isLoggedIn();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public Employee getEmployee(String email, String password) {

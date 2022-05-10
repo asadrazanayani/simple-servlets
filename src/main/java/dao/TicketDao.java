@@ -1,7 +1,7 @@
 package dao;
 
-import com.revature.entity.Employee;
-import com.revature.entity.Ticket;
+import entity.Employee;
+import entity.Ticket;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class TicketDao {
 //        return eDoa.getEmployee(email, password);
 //    }
 
-    public boolean insert(Ticket ticket, int employee_id) {
+    public boolean insert(Ticket ticket) {
         boolean isSuccess = false;
         String query = "insert into tickets (ticket_amount, ticket_description, ticket_category, employee_id) VALUES" +
                 "(?, ?, ?, ?);";
@@ -41,15 +41,15 @@ public class TicketDao {
             ps.setDouble(1, ticket.getAmount());
             ps.setString(2, ticket.getDescription());
             ps.setString(3, ticket.getExpenseCategory());
-            ps.setInt(4, employee_id);
+            ps.setInt(4, ticket.getEmployee_id());
             int count = ps.executeUpdate();
             if (count > 0) isSuccess = true;
         } catch (Exception ex) {}
         return isSuccess;
     }
 
-    public com.revature.dao.UDArray<Ticket> getTickets(int employee_id, String order) {
-        com.revature.dao.UDArray<Ticket> tickets = new com.revature.dao.UDArray<>();
+    public UDArray<Ticket> getTickets(int employee_id, String order) {
+        UDArray<Ticket> tickets = new UDArray<>();
         String DESCOrASC = order.equals("DESC") ? "DESC" : "ASC";
         String query = String.format("SELECT * from tickets where employee_id = %s ORDER BY ticket_timestamp %s;",
                 employee_id, DESCOrASC);
@@ -64,8 +64,23 @@ public class TicketDao {
         return tickets;
     }
 
-    public com.revature.dao.UDArray<Ticket> getTickets() {
-        com.revature.dao.UDArray<Ticket> tickets = new com.revature.dao.UDArray<>();
+    public UDArray<Ticket> getPendingTickets(int employee_id) {
+        UDArray<Ticket> tickets = new UDArray<>();
+        String query = String.format("SELECT * from tickets where employee_id = %s and ticket_status = 'pending'",
+                employee_id);
+        try {
+            Statement statement = conn.createStatement();
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()) {
+                Ticket ticket = getTicketFromRS(rs);
+                tickets.add(ticket);
+            }
+        } catch (Exception ex) {ex.printStackTrace();}
+        return tickets;
+    }
+
+    public UDArray<Ticket> getTickets() {
+        UDArray<Ticket> tickets = new UDArray<>();
        String query = ("SELECT * from tickets;");
         try {
             Statement statement = conn.createStatement();

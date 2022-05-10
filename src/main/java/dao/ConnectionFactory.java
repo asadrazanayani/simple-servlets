@@ -37,6 +37,7 @@ public class ConnectionFactory {
             String url = bundle.getString("url");
             String username = bundle.getString("username");
             String password = bundle.getString("password");
+            System.out.println(url);
 
             try {
                 connection = DriverManager.getConnection(url, username, password);

@@ -1,6 +1,6 @@
 package dao;
 
-import com.revature.entity.Manager;
+import entity.Manager;
 
 import java.sql.*;
 

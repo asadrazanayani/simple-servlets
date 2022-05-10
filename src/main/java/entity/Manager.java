@@ -1,10 +1,11 @@
-package com.revature.entity;
+package entity;
 
 public class Manager {
     private int manager_id;
     private String manager_name;
     private String manager_email;
     private String manager_password;
+    private boolean is_logged_in;
 
     public Manager(int manager_id, String manager_name, String manager_email, String manager_password) {
         this.manager_id = manager_id;
@@ -20,6 +21,14 @@ public class Manager {
     }
 
     public Manager() {
+    }
+
+    public Manager(int manager_id, String manager_name, String manager_email, String manager_password, boolean is_logged_in) {
+        this.manager_id = manager_id;
+        this.manager_name = manager_name;
+        this.manager_email = manager_email;
+        this.manager_password = manager_password;
+        this.is_logged_in = is_logged_in;
     }
 
     public int getManager_id() {
