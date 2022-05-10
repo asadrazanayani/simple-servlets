@@ -42,5 +42,15 @@
         <url-pattern>/tickets</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>ManagerServlet</servlet-name>
+        <servlet-class>servlet.ManagerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ManagerServlet</servlet-name>
+        <url-pattern>/managers</url-pattern>
+    </servlet-mapping>
+
+
 
 </web-app>

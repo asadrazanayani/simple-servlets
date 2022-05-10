@@ -7,6 +7,26 @@ import java.sql.*;
 public class ManagerDao {
     Connection conn = ConnectionFactory.getConnection();
 
+    public boolean update(Manager manager) {
+        boolean isUpdated = false;
+        String query = "UPDATE managers SET manager_name=?, manager_email=?, manager_password=?, is_logged_in=? WHERE" +
+                " manager_id=?;";
+        try {
+            PreparedStatement ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, manager.getManager_name());
+            ps.setString(2, manager.getManager_email());
+            ps.setString(3, manager.getManager_password());
+            ps.setBoolean(4, manager.isIs_logged_in());
+            ps.setInt(5, manager.getManager_id());
+            isUpdated = ps.executeUpdate() > 0;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return isUpdated;
+
+    }
+
     public boolean managementLogin(String manager_email, String manager_password) {
         boolean isLoginSuccess = false;
         String query = "SELECT * from managers where manager_email = ? and manager_password = ?;";

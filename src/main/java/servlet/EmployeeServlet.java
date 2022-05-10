@@ -87,9 +87,6 @@ public class EmployeeServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getPathInfo();
-        if (path.contains("tickets")) {
-            req.getRequestDispatcher("/tickets").include(req, resp);
-        }
         PrintWriter out = resp.getWriter();
         StringBuffer input = new StringBuffer();
         String line = null;
@@ -106,6 +103,9 @@ public class EmployeeServlet extends HttpServlet {
             if (isInserted) {
                 out.println("Employee " + employee.toString() + "inserted");
                 resp.setStatus(200);
+            }
+            if (path.contains("tickets")) {
+                req.getRequestDispatcher("/tickets").include(req, resp);
             }
         } catch (Exception e) {
             e.printStackTrace();

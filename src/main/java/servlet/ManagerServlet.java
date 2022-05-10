@@ -1,7 +1,10 @@
 package servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dao.DaoFactory;
+import dao.ManagerDao;
 import entity.Employee;
+import entity.Manager;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,6 +15,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class ManagerServlet extends HttpServlet {
+    ManagerDao managerDao = DaoFactory.getManagerDao();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -29,18 +33,15 @@ public class ManagerServlet extends HttpServlet {
                 System.out.println(line);
             }
             ObjectMapper objectMapper = new ObjectMapper();
-            Employee employee = objectMapper.readValue(input.toString(), Employee.class);
-            System.out.println(employee.toString());
-            boolean isUpdated = employeeDao.update(employee);
+            Manager manager = objectMapper.readValue(input.toString(), Manager.class);
+            boolean isUpdated = managerDao.update(manager);
             if (isUpdated) {
-                out.println("Employee " + employee.toString() + "Updated");
+                out.println("Manager " + manager.toString() + "Updated");
                 resp.setStatus(200);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
     }
 
     @Override

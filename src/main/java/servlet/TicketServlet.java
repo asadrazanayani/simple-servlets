@@ -17,8 +17,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class TicketServlet extends HttpServlet {
+
     EmployeeDao employeeDao = DaoFactory.getEmployeDao();
     TicketDao ticketDao = DaoFactory.getTicketDao();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         System.out.println("At do Get Ticket");
@@ -45,6 +47,7 @@ public class TicketServlet extends HttpServlet {
                 out.println(objectMapper.writeValueAsString("Not Logged In"));
             }
         }
+
         String orderby = req.getParameter("orderby").trim();
         if (orderby != null) {
             System.out.println(orderby);
@@ -80,9 +83,6 @@ public class TicketServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-
     }
 
     @Override
