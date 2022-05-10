@@ -48,7 +48,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>ManagerServlet</servlet-name>
-        <url-pattern>/managers</url-pattern>
+        <url-pattern>/managers/*</url-pattern>
     </servlet-mapping>
 
 

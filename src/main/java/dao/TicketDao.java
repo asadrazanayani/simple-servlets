@@ -81,7 +81,7 @@ public class TicketDao {
 
     public UDArray<Ticket> getTickets() {
         UDArray<Ticket> tickets = new UDArray<>();
-       String query = ("SELECT * from tickets;");
+       String query = ("SELECT * from tickets where ticket_status = 'pending';");
         try {
             Statement statement = conn.createStatement();
             ResultSet rs = statement.executeQuery(query);

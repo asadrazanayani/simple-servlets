@@ -23,6 +23,7 @@ public class EmployeeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+
         System.out.println("At employee get");
         resp.setHeader("Content-type", "application/json");
         ObjectMapper objectMapper = new ObjectMapper();
@@ -36,7 +37,7 @@ public class EmployeeServlet extends HttpServlet {
                 UDArray<Employee> employees = employeeDao.getAllEmployees();
                 for (int i = 0; i < employees.getSize(); i++) {
                     if (i == 0) out.println("[");
-                    out.println("\t" + objectMapper.writeValueAsString(employees.get(i)));
+                    out.println("\t" + objectMapper.writeValueAsString(employees.get(i)) + ",");
                 }
                 out.println("]");
             }
@@ -114,6 +115,7 @@ public class EmployeeServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String pathInfo = req.getPathInfo();
         PrintWriter out = resp.getWriter();
         StringBuffer input = new StringBuffer();
         String line = null;

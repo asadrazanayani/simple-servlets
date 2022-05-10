@@ -30,6 +30,11 @@ public class Ticket {
     public Ticket() {
     }
 
+    public Ticket(int employee_id, String status) {
+        this.employee_id = employee_id;
+        this.status = status;
+    }
+
     public Ticket(double amount, String description, String category) {
         this.amount = amount;
         this.description = description;

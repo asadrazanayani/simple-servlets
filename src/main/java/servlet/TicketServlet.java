@@ -32,7 +32,6 @@ public class TicketServlet extends HttpServlet {
         ObjectMapper objectMapper = new ObjectMapper();
         if (paths[paths.length - 1].equals("pending")) {
             int employee_id = Integer.parseInt(paths[1]);
-            System.out.println(employee_id);
             boolean loggedIn = employeeDao.isLoggedIn(employee_id);
             System.out.println(loggedIn);
             if (loggedIn) {
@@ -40,7 +39,7 @@ public class TicketServlet extends HttpServlet {
                 System.out.println(tickets.getSize());
                 resp.setStatus(200);
                 for (int i = 0; i < tickets.getSize(); i++) {
-                    out.println(objectMapper.writeValueAsString(tickets.get(i)));
+                    out.println(objectMapper.writeValueAsString(tickets.get(i)) + ",");
                 }
             } else {
                 resp.setStatus(401);
@@ -52,11 +51,15 @@ public class TicketServlet extends HttpServlet {
         if (orderby != null) {
             System.out.println(orderby);
             int employee_id = Integer.parseInt(paths[1]);
-            System.out.println(employee_id);
-            UDArray<Ticket> ticketUDArray = ticketDao.getTickets(employee_id, orderby);
-            for (int i  = 0; i < ticketUDArray.getSize(); i++) {
-                System.out.println(ticketUDArray.get(i).toString());
-                out.println(objectMapper.writeValueAsString(ticketUDArray.get(i)));
+            boolean isLoggedIn = employeeDao.isLoggedIn(employee_id);
+            if (isLoggedIn) {
+                UDArray<Ticket> ticketUDArray = ticketDao.getTickets(employee_id, orderby);
+                for (int i = 0; i < ticketUDArray.getSize(); i++) {
+                    System.out.println(ticketUDArray.get(i).toString());
+                    out.println(objectMapper.writeValueAsString(ticketUDArray.get(i)) + ",");
+                }
+            } else {
+                out.println("Please login first");
             }
         }
     }
@@ -74,11 +77,15 @@ public class TicketServlet extends HttpServlet {
             }
             ObjectMapper objectMapper = new ObjectMapper();
             Ticket ticket = objectMapper.readValue(input.toString(), Ticket.class);
-            System.out.println(ticket.toString());
-            boolean isInserted = ticketDao.insert(ticket);
-            if (isInserted) {
-                out.println("Ticket " + ticket.toString() + "inserted");
-                resp.setStatus(200);
+            boolean emLoggedIn = employeeDao.isLoggedIn(ticket.getEmployee_id());
+            if (emLoggedIn) {
+                boolean isInserted = ticketDao.insert(ticket);
+                if (isInserted) {
+                    out.println("Ticket " + ticket.toString() + "inserted");
+                    resp.setStatus(200);
+                }
+            } else {
+                out.println("Please login In first");
             }
         } catch (Exception e) {
             e.printStackTrace();

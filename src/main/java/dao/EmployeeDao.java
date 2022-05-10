@@ -116,13 +116,12 @@ public class EmployeeDao {
         return false;
     }
 
-    public Employee getEmployee(String email, String password) {
+    public Employee getEmployee(int employee_id) {
         Employee em = null;
-        String query = "SELECT * FROM employees where employee_email = ? and employee_password = ?";
+        String query = "SELECT * FROM employees where employee_id = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, email);
-            ps.setString(2, password);
+            ps.setInt(1, employee_id);
             ResultSet rs = ps.executeQuery();
             rs.next();
             em = getEmployeeFromRS(rs);
