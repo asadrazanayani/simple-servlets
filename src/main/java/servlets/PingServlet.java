@@ -1,4 +1,4 @@
-package servlet;
+package entity;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

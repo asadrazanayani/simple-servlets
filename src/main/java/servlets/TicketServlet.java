@@ -1,12 +1,11 @@
-package servlet;
+package entity;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dao.DaoFactory;
 import dao.EmployeeDao;
 import dao.TicketDao;
 import dao.UDArray;
-import entity.Employee;
-import entity.Ticket;
+import servlet.entity.Ticket;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

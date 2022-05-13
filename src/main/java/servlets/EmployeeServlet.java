@@ -1,12 +1,10 @@
-package servlet;
+package entity;
 
-import com.fasterxml.jackson.core.json.async.NonBlockingJsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dao.DaoFactory;
 import dao.EmployeeDao;
 import dao.UDArray;
-import entity.Employee;
-import org.postgresql.shaded.com.ongres.scram.common.bouncycastle.pbkdf2.Strings;
+import servlet.entity.Employee;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 
 public class EmployeeServlet extends HttpServlet {
     EmployeeDao employeeDao = DaoFactory.getEmployeDao();

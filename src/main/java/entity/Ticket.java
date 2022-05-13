@@ -1,4 +1,4 @@
-package entity;
+package servlet.entity;
 
 import java.sql.Timestamp;
 
