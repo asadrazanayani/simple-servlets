@@ -3,8 +3,6 @@ package dao;
 import entity.Employee;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class EmployeeDao {
 
@@ -116,21 +114,24 @@ public class EmployeeDao {
         return false;
     }
 
-    public Employee getEmployee(int employee_id) {
-        Employee em = null;
-        String query = "SELECT * FROM employees where employee_id = ?";
-        try {
-            PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, employee_id);
-            ResultSet rs = ps.executeQuery();
-            rs.next();
-            em = getEmployeeFromRS(rs);
-        } catch (SQLException e) {
-            System.out.println(e.getLocalizedMessage());
-        }
-        return em;
-    }
 
+    public boolean initTable() {
+        String query = "DROP TABLE IF EXISTS EMPLOYEES CASCADE;" +
+                "CREATE TABLE employees (" +
+                "employee_id SERIAL PRIMARY KEY," +
+                "employee_name VARCHAR(100) NOT NULL," +
+                "employee_email VARCHAR(100) NOT NULL," +
+                "employee_password VARCHAR(100) NOT NULL," +
+                "is_logged_in boolean DEFAULT false" +
+                ");";
+        try {
+            Statement statement = connection.createStatement();
+            return statement.executeUpdate(query) > 0;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
 
 
 }

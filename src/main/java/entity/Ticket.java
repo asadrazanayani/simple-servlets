@@ -1,4 +1,4 @@
-package servlet.entity;
+package entity;
 
 import java.sql.Timestamp;
 
@@ -8,38 +8,38 @@ public class Ticket {
     private String description;
     private Timestamp timestamp;
     private String status;
-    private String Category;
+    private String category;
     private int employee_id;
 
-    public Ticket(int id, double amount, String description, Timestamp timestamp, String status, String expenseCategory) {
-        this.id = id;
-        this.amount = amount;
-        this.description = description;
-        this.timestamp = timestamp;
-        this.status = status;
-        this.Category = expenseCategory;
-    }
-
-    public Ticket(double amount, String description, String status, String expenseCategory) {
-        this.amount = amount;
-        this.description = description;
-        this.status = status;
-        this.Category = expenseCategory;
-    }
+//    public Ticket(int id, double amount, String description, Timestamp timestamp, String status, String expenseCategory) {
+//        this.id = id;
+//        this.amount = amount;
+//        this.description = description;
+//        this.timestamp = timestamp;
+//        this.status = status;
+//        this.Category = expenseCategory;
+//    }
+//
+//    public Ticket(double amount, String description, String status, String expenseCategory) {
+//        this.amount = amount;
+//        this.description = description;
+//        this.status = status;
+//        this.Category = expenseCategory;
+//    }
 
     public Ticket() {
     }
 
-    public Ticket(int employee_id, String status) {
-        this.employee_id = employee_id;
-        this.status = status;
-    }
-
-    public Ticket(double amount, String description, String category) {
-        this.amount = amount;
-        this.description = description;
-        Category = category;
-    }
+//    public Ticket(int employee_id, String status) {
+//        this.employee_id = employee_id;
+//        this.status = status;
+//    }
+//
+//    public Ticket(double amount, String description, String category) {
+//        this.amount = amount;
+//        this.description = description;
+//        Category = category;
+//    }
 
     public Ticket(int id, double amount, String description, Timestamp timestamp, String status, String category, int employee_id) {
         this.id = id;
@@ -47,8 +47,22 @@ public class Ticket {
         this.description = description;
         this.timestamp = timestamp;
         this.status = status;
-        Category = category;
+        this.category = category;
         this.employee_id = employee_id;
+    }
+
+    public Ticket(double amount, String description, String category, int employee_id) {
+        this.amount = amount;
+        this.description = description;
+        this.category = category;
+        this.employee_id = employee_id;
+    }
+
+    public Ticket(double amount, String description, String status, String category) {
+        this.amount = amount;
+        this.description = description;
+        this.status = status;
+        this.category = category;
     }
 
 
@@ -93,19 +107,19 @@ public class Ticket {
     }
 
     public String getExpenseCategory() {
-        return Category;
+        return category;
     }
 
     public void setExpenseCategory(String expenseCategory) {
-        this.Category = expenseCategory;
+        this.category = expenseCategory;
     }
 
     public String getCategory() {
-        return Category;
+        return category;
     }
 
     public void setCategory(String category) {
-        Category = category;
+        this.category = category;
     }
 
     public int getEmployee_id() {
@@ -118,6 +132,6 @@ public class Ticket {
 
     @Override
     public String toString() {
-        return "Ticket{" + "id=" + id + ", amount=" + amount + ", description='" + description + '\'' + ", timestamp=" + timestamp + ", status='" + status + '\'' + ", Category='" + Category + '\'' + ", employee_id=" + employee_id + '}';
+        return "Ticket{" + "id=" + id + ", amount=" + amount + ", description='" + description + '\'' + ", timestamp=" + timestamp + ", status='" + status + '\'' + ", Category='" + category + '\'' + ", employee_id=" + employee_id + '}';
     }
 }

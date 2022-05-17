@@ -1,11 +1,8 @@
 package dao;
 
-import entity.Employee;
 import entity.Ticket;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TicketDao {
 
@@ -28,10 +25,6 @@ public class TicketDao {
         return ticket;
     }
 
-//    private Employee getEmployee(String email, String password) {
-//        return eDoa.getEmployee(email, password);
-//    }
-
     public boolean insert(Ticket ticket) {
         boolean isSuccess = false;
         String query = "insert into tickets (ticket_amount, ticket_description, ticket_category, employee_id) VALUES" +
@@ -48,7 +41,7 @@ public class TicketDao {
         return isSuccess;
     }
 
-    public UDArray<Ticket> getTickets(int employee_id, String order) {
+    public UDArray<Ticket> getTicketsPending(int employee_id, String order) {
         UDArray<Ticket> tickets = new UDArray<>();
         String DESCOrASC = order.equals("DESC") ? "DESC" : "ASC";
         String query = String.format("SELECT * from tickets where employee_id = %s ORDER BY ticket_timestamp %s;",
@@ -79,7 +72,7 @@ public class TicketDao {
         return tickets;
     }
 
-    public UDArray<Ticket> getTickets() {
+    public UDArray<Ticket> getTicketsPending() {
         UDArray<Ticket> tickets = new UDArray<>();
        String query = ("SELECT * from tickets where ticket_status = 'pending';");
         try {
@@ -105,5 +98,25 @@ public class TicketDao {
             ex.printStackTrace();
         }
         return isSuccessful;
+    }
+
+    public boolean initTable() {
+        String query = "DROP TABLE IF EXISTS TICKETS CASCADE;" +
+                "CREATE TABLE tickets (" +
+                "ticket_id SERIAL PRIMARY KEY," +
+                "ticket_amount DECIMAL," +
+                "ticket_description VARCHAR(250)," +
+                "ticket_timestamp TIMESTAMP default CURRENT_TIMESTAMP," +
+                "ticket_status VARCHAR(50) default 'pending'," +
+                "ticket_category VARCHAR(50), " +
+                "employee_id INTEGER REFERENCES employees(employee_id)" +
+                ")";
+        try {
+            Statement statement = conn.createStatement();
+            return statement.executeUpdate(query) > 0;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
     }
 }

@@ -1,4 +1,4 @@
-package entity;
+package servlets;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,7 +12,7 @@ This will take a simple GET request and respond with "Pong!" and status 202, ind
  */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setStatus(202);
+        resp.setStatus(200);
         resp.getWriter().print("Pong!");
     }
 }

@@ -1,10 +1,10 @@
-package entity;
+package servlets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dao.DaoFactory;
 import dao.EmployeeDao;
 import dao.UDArray;
-import servlet.entity.Employee;
+import entity.Employee;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -19,14 +19,9 @@ public class EmployeeServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-
-        System.out.println("At employee get");
         resp.setHeader("Content-type", "application/json");
         ObjectMapper objectMapper = new ObjectMapper();
-
         PrintWriter out = resp.getWriter();
-
         try {
             String pathInfo = req.getPathInfo();
             System.out.println(pathInfo);
@@ -39,7 +34,7 @@ public class EmployeeServlet extends HttpServlet {
                 out.println("]");
             }
             String[] paths = pathInfo.substring(1).split("/");
-            // pathinfo gets the info for the parameters for query
+            // pathinfo gets the info for the parameters for query and resource
             if (pathInfo != null) {
                 if (paths[paths.length - 1].trim().equals("login")) {
                     String[] loginData = paths[0].split("&");
@@ -51,20 +46,18 @@ public class EmployeeServlet extends HttpServlet {
                     if (isLoggedIn) {
                         resp.setStatus(200);
                         out.println(objectMapper.writeValueAsString("Logged In"));
-                        System.out.println("logged IN");
                     } else {
-                        resp.setStatus(200);
+                        resp.setStatus(401);
                         objectMapper.writeValueAsString("Unable to Log in");
                     }
                 }
                 if (pathInfo.contains("tickets")) {
-                    System.out.println("At the dispatcher");
                     req.getRequestDispatcher("/tickets").include(req, resp);
                 }
             }
 
         } catch(Exception e) {
-            e.getLocalizedMessage();
+            e.printStackTrace();
         }
     }
 
@@ -100,12 +93,13 @@ public class EmployeeServlet extends HttpServlet {
             boolean isInserted = employeeDao.insert(employee);
             if (isInserted) {
                 out.println("Employee " + employee.toString() + "inserted");
-                resp.setStatus(200);
+                resp.setStatus(201);
             }
             if (path.contains("tickets")) {
                 req.getRequestDispatcher("/tickets").include(req, resp);
             }
         } catch (Exception e) {
+            resp.setStatus(400);
             e.printStackTrace();
         }
     }
@@ -124,13 +118,13 @@ public class EmployeeServlet extends HttpServlet {
             }
             ObjectMapper objectMapper = new ObjectMapper();
             Employee employee = objectMapper.readValue(input.toString(), Employee.class);
-            System.out.println(employee.toString());
             boolean isUpdated = employeeDao.update(employee);
             if (isUpdated) {
                 out.println("Employee " + employee.toString() + "Updated");
-                resp.setStatus(200);
+                resp.setStatus(201);
             }
         } catch (Exception e) {
+            resp.setStatus(400);
             e.printStackTrace();
         }
     }

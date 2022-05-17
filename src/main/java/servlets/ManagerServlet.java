@@ -1,12 +1,12 @@
-package entity;
+package servlets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dao.DaoFactory;
 import dao.ManagerDao;
 import dao.TicketDao;
 import dao.UDArray;
-import servlet.entity.Manager;
-import servlet.entity.Ticket;
+import entity.Manager;
+import entity.Ticket;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -23,7 +23,7 @@ public class ManagerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String pathInfo = req.getPathInfo();
         if (pathInfo.contains("viewpending")) {
-            UDArray<Ticket> tickets = ticketDao.getTickets();
+            UDArray<Ticket> tickets = ticketDao.getTicketsPending();
             ObjectMapper objectMapper = new ObjectMapper();
             PrintWriter out = resp.getWriter();
             for (int i = 0; i < tickets.getSize(); i++) {
@@ -31,14 +31,15 @@ public class ManagerServlet extends HttpServlet {
                 out.println("\t" + objectMapper.writeValueAsString(tickets.get(i)) + ",");
             }
             out.println("]");
+            resp.setStatus(200);
         }
+
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String pathInfo = req.getPathInfo();
         if (pathInfo.contains("login")) {
-            System.out.println("At manager put");
             PrintWriter out = resp.getWriter();
             StringBuffer input = new StringBuffer();
             String line = null;
@@ -46,16 +47,19 @@ public class ManagerServlet extends HttpServlet {
                 BufferedReader reader = req.getReader();
                 while ((line = reader.readLine()) != null) {
                     input.append(line);
-                    System.out.println(line);
                 }
                 ObjectMapper objectMapper = new ObjectMapper();
                 Manager manager = objectMapper.readValue(input.toString(), Manager.class);
                 boolean isUpdated = managerDao.update(manager);
                 if (isUpdated) {
                     out.println("Manager " + manager.toString() + "Updated");
-                    resp.setStatus(200);
+                    resp.setStatus(201);
+                } else {
+                    out.println("Cannot login");
+                    resp.setStatus(401);
                 }
             } catch (Exception e) {
+                resp.setStatus(400);
                 e.printStackTrace();
             }
         }
@@ -75,15 +79,12 @@ public class ManagerServlet extends HttpServlet {
                 if (isUpdated) {
                     PrintWriter out = resp.getWriter();
                     out.println("Ticket Status Changed");
+                    resp.setStatus(201);
                 }
             } catch (Exception ex) {
+                resp.setStatus(400);
                 ex.printStackTrace();
             }
         }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
     }
 }

@@ -36,18 +36,8 @@ public class UDArray <T> {
         return (T) container[index];
     }
 
-
-    public void print() {
-        int size = this.size;
-        for (int i = 0; i < size; i++) {
-            System.out.println(this.get(i));
-        }
-    }
-
     public int getSize() {
         return this.size;
     }
-
-
 
 }

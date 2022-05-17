@@ -1,7 +1,5 @@
 package dao;
 
-import entity.Ticket;
-
 // this class doesn't seem super useful because we only have one Dao, but with multiple daos, its use becomes apparent
 // multiple methods to return different daos:
 // we only need 1 dao factory for the entire application, different method to return different daos

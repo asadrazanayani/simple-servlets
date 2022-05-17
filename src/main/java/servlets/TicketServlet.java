@@ -1,11 +1,11 @@
-package entity;
+package servlets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dao.DaoFactory;
 import dao.EmployeeDao;
 import dao.TicketDao;
 import dao.UDArray;
-import servlet.entity.Ticket;
+import entity.Ticket;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -22,7 +22,6 @@ public class TicketServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("At do Get Ticket");
         PrintWriter out = resp.getWriter();
         String path = req.getPathInfo();
         System.out.println(path.contains("pending"));
@@ -38,26 +37,30 @@ public class TicketServlet extends HttpServlet {
                 System.out.println(tickets.getSize());
                 resp.setStatus(200);
                 for (int i = 0; i < tickets.getSize(); i++) {
+                    if (i == 0) out.println("[");
                     out.println(objectMapper.writeValueAsString(tickets.get(i)) + ",");
                 }
+                out.println("]");
             } else {
                 resp.setStatus(401);
-                out.println(objectMapper.writeValueAsString("Not Logged In"));
+                out.println("Please login first");
             }
         }
-
-        String orderby = req.getParameter("orderby").trim();
+        String orderby = null;
+        orderby = req.getParameter("orderby").trim();
         if (orderby != null) {
             System.out.println(orderby);
             int employee_id = Integer.parseInt(paths[1]);
             boolean isLoggedIn = employeeDao.isLoggedIn(employee_id);
             if (isLoggedIn) {
-                UDArray<Ticket> ticketUDArray = ticketDao.getTickets(employee_id, orderby);
+                UDArray<Ticket> ticketUDArray = ticketDao.getTicketsPending(employee_id, orderby);
                 for (int i = 0; i < ticketUDArray.getSize(); i++) {
-                    System.out.println(ticketUDArray.get(i).toString());
+                    if (i == 0) out.println("[");
                     out.println(objectMapper.writeValueAsString(ticketUDArray.get(i)) + ",");
                 }
+                out.println("]");
             } else {
+                resp.setStatus(401);
                 out.println("Please login first");
             }
         }
@@ -81,9 +84,10 @@ public class TicketServlet extends HttpServlet {
                 boolean isInserted = ticketDao.insert(ticket);
                 if (isInserted) {
                     out.println("Ticket " + ticket.toString() + "inserted");
-                    resp.setStatus(200);
+                    resp.setStatus(201);
                 }
             } else {
+                resp.setStatus(401);
                 out.println("Please login In first");
             }
         } catch (Exception e) {

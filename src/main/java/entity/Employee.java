@@ -1,4 +1,4 @@
-package servlet.entity;
+package entity;
 
 public class Employee {
     private int employee_id;
